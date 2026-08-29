@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List</title>
+</head>
+<body>
+    <h3>Listing Details:</h3>
+    <ul>
+        <li>ID = <%= indvList.id %></li>
+        <li>Title = <%= indvList.title %></li>
+        <li>Description = <%= indvList.description %></li>
+        <li>Price = &#8377; <%= indvList.price.toLocaleString("en-IN") %></li>
+        <li>Location = <%= indvList.location %></li>
+        <!-- <li><img src="<%= indvList.image %></" alt="image"></li> -->
+    </ul>
+    <br>
+    <a href="/listings/<%=indvList.id%>/edit">Edit Deatils</a>
+    <br><br>
+    <form method="post" action="/listings/<%= indvList.id %>?_method=DELETE">
+        <button>Delete this Listing</button>
+    </form>
+    
+</body>
+</html>
