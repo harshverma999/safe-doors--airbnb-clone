@@ -1,18 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create New Listing</title>
-</head>
-<body>
+<% layout('/layouts/boilerplate') %>
+    <div class="row mt-3">
+        <div class="col-8 offset-2">
+            <h2>Edit Your Listing</h2>
+
     <form method="post" action="/listings/<%=prevData.id%>?_method=PUT">
-        <input value="<%=prevData.title%>" type="text" name="prevData[title]"> <br><br>
-        <textarea name="prevData[description]"><%=prevData.description%></textarea> <br><br>
-        <input value="<%=prevData.price%>" type="number" name="prevData[price]"> <br><br>
-        <input value="<%=prevData.location%>" type="text" name="prevData[location]"> <br><br>
-        <input value="<%=prevData.country%>" type="text" name="prevData[country]"> <br><br>
-        <button>submit</button>
+        <div class="mb-3">
+            <label for="title">Title</label>
+            <input class="form-control" value="<%=prevData.title%>" type="text" name="prevData[title]">
+        </div>
+        <div class="mb-3">
+            <label for="description">Description</label>
+            <textarea class="form-control" name="prevData[description]"><%=prevData.description%></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="image">Image</label>
+            <input class="form-control" type="text" value="<%=prevData.image%>">
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+            <label for="price">Price</label>
+            <input class="form-control" value="<%=prevData.price%>" type="number" name="prevData[price]">
+        </div>
+        <div class="mb-3 col-md-8">
+            <label for="country">Country</label>
+            <input class="form-control" value="<%=prevData.country%>" type="text" name="prevData[country]">
+        </div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="location">Location</label>
+            <input class="form-control" value="<%=prevData.location%>" type="text" name="prevData[location]">
+        </div>
+
+        <button class="btn btn-dark mb-3 edit-btn">Edit</button>
     </form>
-</body>
-</html>
+    </div>
+    </div>
