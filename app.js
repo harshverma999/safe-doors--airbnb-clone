@@ -8,7 +8,8 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/expressError.js");
-const {listingSchema} = require("./schema.js");
+const {listingSchema, reviewSchema} = require("./schema.js");
+const Review = require("./models/review.js"); 
 
 main()
 .then(()=>{
@@ -35,6 +36,18 @@ const validateListing = (req,res,next)=>{
     if(error){
         let errorMsg = error.details.map(el=>el.message).join(",");
         throw new ExpressError(400,errorMsg);
+    }else{
+        next();
+    }
+}
+
+const validateReview = (req,res,next)=>{
+    let {error} = reviewSchema.validate(req.body);
+    if(error){
+        let errorMsg = error.details.map(el=>el.message).join(",");
+        throw new ExpressError(400,errorMsg);
+    }else{
+        next();
     }
 }
 
@@ -79,6 +92,31 @@ app.delete("/listings/:id", wrapAsync(async (req,res)=>{
 })
 );
 
+// Reviews Post Route
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req, res) => {
+    const { id } = req.params;
+
+    const listing = await Listing.findById(id);
+    const newReview = new Review(req.body.review);
+
+    listing.reviews.push(newReview);
+
+    await newReview.save();
+    await listing.save();
+
+    res.redirect(`/listings/${id}`);
+}));
+
+//Delete Review Route
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+
+    await Listing.findByIdAndUpdate(id,{ $pull: { reviews: reviewId }});
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}`);
+}));
+
 // update route
 app.put("/listings/:id",validateListing,wrapAsync(async (req,res)=>{
     const {id} = req.params;
@@ -98,7 +136,7 @@ app.get("/listings/:id/edit",wrapAsync(async (req, res)=>{
 // show individual list
 app.get("/listings/:id", wrapAsync(async (req,res)=>{
     let {id} = req.params;
-    const indvList = await Listing.findById(id)
+    const indvList = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs",{indvList})
 })
 );
@@ -116,6 +154,8 @@ app.get("/listings/:id", wrapAsync(async (req,res)=>{
 //     await testListing.save();
 //     res.send("test passed");
 // });
+
+
 
 
 
