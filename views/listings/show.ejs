@@ -6,24 +6,28 @@
             <div class="card col-6 offset-3 show-card listing-card">
                 <img src="<%=indvList.image%>" class="card-img-top show-img" alt="listing_image">
                 <div class="card-body">
-                    <p class="card-text">
-                        <%= indvList.description %> <br>
-                        &#8377; <%= indvList.price.toLocaleString("en-IN") %> <br>
-                        <%= indvList.location %> <br>
-                        <%= indvList.country %>
-                    </p>
+                    <p class="card-text"><strong>Owned by: </strong> <i><%= indvList.owner.username %></i> </p>
+                    <p><%= indvList.description %></p>
+                    <p>&#8377; <%= indvList.price.toLocaleString("en-IN") %> </p>
+                    <p><%= indvList.location %> </p>
+                    <p><%= indvList.country %></p>
                 </div>
             </div>
 
+            <% if(currentUser && indvList.owner._id.equals(currentUser._id)){ %>
             <div class="btns mb-3">
                 <a href="/listings/<%=indvList.id%>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit</a>
 
                 <form method="post" action="/listings/<%= indvList.id %>?_method=DELETE">
                     <button class="btn btn-dark offset-5 ">Delete</button>
                 </form>
-            </div>
-            <hr>
+            </div> 
+            <% } %>
+            
+            
             <div class="col-8 offset-3 mb-3">
+                <hr>
+                <% if(currentUser){ %>
                 <h4>Leave a Review</h4>
                 <form action="/listings/<%= indvList.id %>/reviews" method="POST" novalidate class="needs-validation">
                     <div class="mb-3 mt-3">
@@ -37,14 +41,14 @@
                     </div>
                     <button class="btn btn-primary" type="submit">Submit Review</button>
                 </form>
-                <hr>
-
-                <p><b> All Reviews </b></p>
-                <div class="row">
+                <% } %>
+                
+            <p><b> All Reviews </b></p>
+            <div class="row">
                 <% for (review of indvList.reviews) { %>
                     <div class="card col-5 ms-3 mb-3">
                         <div class="card-body">
-                            <h5 class="card-title">Harsh Verma</h5>
+                            <h5 class="card-title">@<%= review.author.username %></h5>
                             <p class="card-text"><%= review.rating %>⭐</p>
                             <p class="card-text"><%= review.comment %></p>
 
